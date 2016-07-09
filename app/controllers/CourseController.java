@@ -7,13 +7,20 @@ import play.data.validation.Constraints;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.CourseTypeEnum;
 
 import java.util.List;
+
+import static utils.CourseTypeEnum.BOOK_NAME;
 
 public class CourseController extends Controller {
 
     public Result getCourse(Integer id) {
         return ok(Json.toJson(Course.find.byId(id)));
+    }
+
+    public Result booklist() {
+        return ok(Json.toJson(Ebean.find(Course.class).select("id, title").where().eq("type", CourseTypeEnum.BOOK_NAME.getType()).findList()));
     }
 
     public Result list() {

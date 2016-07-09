@@ -34,4 +34,6 @@ GET     /app/v1/courses             controllers.CourseController.listByParentId(
 
 PATCH   /app/v1/course              controllers.CourseController.updateCourse
 
-GET    /app/v1/course              controllers.CourseController.getCourse(id: Integer)
+GET     /app/v1/course              controllers.CourseController.getCourse(id: Integer)
+
+GET     /app/v1/booklist            controllers.CourseController.booklist
