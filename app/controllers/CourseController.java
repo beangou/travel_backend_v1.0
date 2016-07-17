@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Course;
 import play.data.Form;
 import play.data.validation.Constraints;
@@ -15,7 +16,10 @@ import static utils.CourseTypeEnum.BOOK_NAME;
 
 public class CourseController extends Controller {
 
-    public Result getCourse(Integer id) {
+    public Result getCourse() {
+        JsonNode json = request().body().asJson();
+        System.out.println("json=" + json);
+        Integer id = json.findPath("id").asInt();
         return ok(Json.toJson(Course.find.byId(id)));
     }
 
@@ -39,26 +43,37 @@ public class CourseController extends Controller {
         return ok(ApplicationController.buildJsonResponse("success", "course updated successfully"));
     }
 
-    public Result listByParentId(Integer parentId) {
+    public Result listByParentId() {
+        JsonNode json = request().body().asJson();
+        System.out.println("json=" + json);
+        Integer parentId = json.findPath("parentId").asInt();
+        System.out.println("parentId=" + parentId);
         List<Course> list = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", parentId).findList();
         return ok(Json.toJson(list));
     }
 
     public Result addCourse() {
-        Form<CourseForm> courseForm = Form.form(CourseForm.class).bindFromRequest();
+//        Form<CourseForm> courseForm = Form.form(CourseForm.class).bindFromRequest();
 
-        if (courseForm.hasErrors()) {
-            return badRequest(courseForm.errorsAsJson());
-        } else {
-            Course course = new Course();
+//        if (courseForm.hasErrors()) {
+//            return badRequest(courseForm.errorsAsJson());
+//        } else {
+//        request().
+        JsonNode json = request().body().asJson();
+        System.out.println("json=" + json);
+        Integer parentId = json.findPath("parentId").asInt();
+        Integer type = json.findPath("type").asInt();
+        String title = json.findPath("title").asText();
 
-            course.setContent(courseForm.get().content);
-            course.setParentId(courseForm.get().parentId);
-            course.setTitle(courseForm.get().title);
-            course.setType(courseForm.get().type);
+        System.out.println("************");
+        System.out.println("title===" + title);
 
-            course.save();
-        }
+        Course course = new Course();
+        course.setParentId(parentId);
+        course.setTitle(title);
+        course.setType(type);
+
+        course.save();
         return ok(ApplicationController.buildJsonResponse("success", "course added successfully"));
     }
 

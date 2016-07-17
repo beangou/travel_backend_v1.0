@@ -28,12 +28,14 @@ GET     /app/logout                 controllers.ApplicationController.logout
 
 GET     /app/isauthenticated        controllers.ApplicationController.isAuthenticated
 
-POST    /app/v1/course              controllers.CourseController.addCourse
+POST    /app/v1/addcourse           controllers.CourseController.addCourse
 
-GET     /app/v1/courses             controllers.CourseController.listByParentId(parentId: Integer ?= 0)
+POST    /app/v1/courses             controllers.CourseController.listByParentId
 
 PATCH   /app/v1/course              controllers.CourseController.updateCourse
 
-GET     /app/v1/course              controllers.CourseController.getCourse(id: Integer)
+POST    /app/v1/course              controllers.CourseController.getCourse
 
-GET     /app/v1/booklist            controllers.CourseController.booklist
+POST    /app/v1/booklist            controllers.CourseController.booklist
+
+POST    /app/v1/question            controllers.QuestionController.addQuestion
