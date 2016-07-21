@@ -49,6 +49,19 @@ public class CourseController extends Controller {
         Integer parentId = json.findPath("parentId").asInt();
         System.out.println("parentId=" + parentId);
         List<Course> list = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", parentId).findList();
+        Integer type = json.findPath("type").asInt();
+        System.out.println("type="+type);
+        if(type == 3 && list != null) {
+            // 如果查询节,则也查出小节
+           for (Course course : list) {
+               List<Course> sonlist = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
+               System.out.println("*********");
+               System.out.println("sonlist=" + sonlist);
+               course.setSonCourses(sonlist);
+               sonlist = null;
+           }
+        }
+
         return ok(Json.toJson(list));
     }
 
@@ -73,7 +86,11 @@ public class CourseController extends Controller {
         course.setTitle(title);
         course.setType(type);
 
+        System.out.println("courseTitle=" + course.getTitle());
+        System.out.println("course=" + course);
         course.save();
+        System.out.println("courseTitle=" + course.getTitle());
+        System.out.println("course=" + course);
         return ok(ApplicationController.buildJsonResponse("success", "course added successfully"));
     }
 

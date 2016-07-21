@@ -5,7 +5,10 @@ import com.avaje.ebean.Model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by beangou on 16/7/2.
@@ -28,6 +31,17 @@ public class Course extends Model {
 
     // 书的parentId为0
     public Integer parentId;
+
+    @Transient
+    public List<Course> sonCourses;
+
+    public List<Course> getSonCourses() {
+        return sonCourses;
+    }
+
+    public void setSonCourses(List<Course> sonCourses) {
+        this.sonCourses = sonCourses;
+    }
 
     public static Finder<Integer, Course> find = new Finder<>(Course.class);
 
