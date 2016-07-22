@@ -20,7 +20,7 @@ public class Question extends Model {
     public String title;
 
     // 选项
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     public List<Option> options;
 
     // 多个,则用"、"隔开

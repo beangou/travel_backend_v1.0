@@ -1,5 +1,7 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
 import models.BlogPost;
 import models.Option;
 import models.Question;
@@ -11,6 +13,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,29 +22,44 @@ import java.util.List;
  */
 public class QuestionController extends Controller {
 
+    public Result list() {
+        List<Question> list = Ebean.find(Question.class).findList();
+        return ok(Json.toJson(list));
+    }
+
     public Result addQuestion() {
-        Form<QuestionForm> questionForm = Form.form(QuestionForm.class).bindFromRequest();
+//        Form<QuestionForm> questionForm = Form.form(QuestionForm.class).bindFromRequest();
 
-        if (questionForm.hasErrors()) {
-            return badRequest(questionForm.errorsAsJson());
-        } else {
+//        if (questionForm.hasErrors()) {
+//            return badRequest(questionForm.errorsAsJson());
+//        } else {
 
-            List<Option> optionList = new ArrayList<>();
-            for (String optionStr :questionForm.get().options) {
-                Option option = new Option();
-                option.setContent(optionStr);
-                optionList.add(option);
-                option = null;
-            }
+        JsonNode json = request().body().asJson();
 
-            Question question = new Question();
-            question.setTitle(questionForm.get().title);
-            question.setAnalysis(questionForm.get().analysis);
-            question.setAnswers(questionForm.get().answers);
-            question.setOptions(optionList);
+        System.out.println("json=" + json);
 
-            question.save();
+//        List<String> options = json.findValuesAsText("options");
+
+        List<Option> optionList = new ArrayList<>();
+        Iterator<JsonNode> options = json.path("options").iterator();
+        while(options.hasNext()) {
+            JsonNode node = options.next();
+            Option option = new Option();
+            option.setContent(node.textValue());
+            optionList.add(option);
+            System.out.println("option=" + node.textValue());
         }
+
+        System.out.println("options=" + options);
+
+        Question question = new Question();
+        question.setTitle(json.path("title").asText());
+        question.setAnalysis(json.path("analysis").asText());
+        question.setAnswers(json.path("answers").toString());
+        question.setOptions(optionList);
+
+        question.save();
+//        }
         return ok(ApplicationController.buildJsonResponse("success", "question added successfully"));
     }
 
@@ -54,7 +72,7 @@ public class QuestionController extends Controller {
         public String options[];
 
         @Constraints.Required
-        public String answers;
+        public String answers[];
 
         public String analysis;
     }
