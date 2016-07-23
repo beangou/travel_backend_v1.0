@@ -29,14 +29,15 @@ public class QuestionController extends Controller {
             pageIndex = 1;
         }
         if(pageSize == null) {
-            pageSize = 10;
+            pageSize = 5;
         }
         PagedList<Question> list = Ebean.find(Question.class).findPagedList(pageIndex, pageSize);
-
+        int rowCount = Question.find.findRowCount();
         Map<String, Object> map = new HashMap<>();
         map.put("responseCode", "00");
         map.put("responseMsg", "SUCCESS");
-        map.put("data", list);
+        map.put("data", list.getList());
+        map.put("totalItems", rowCount);
         return ok(Json.toJson(map));
     }
 
