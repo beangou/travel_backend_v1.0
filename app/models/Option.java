@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,6 +28,7 @@ public class Option extends Model {
 
     // 题目
     @ManyToOne
+    @JsonBackReference
     public Question question;
 
     // 创建时间
@@ -43,7 +45,6 @@ public class Option extends Model {
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     public void setContent(String content) {
         this.content = content;

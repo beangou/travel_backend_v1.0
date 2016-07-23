@@ -6,7 +6,7 @@
 GET     /                           controllers.HomeController.index
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
-# An example controller showing how to write asynchronous code
+# An example controller showing how to write asynchronous responseCode
 GET     /message                    controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
@@ -41,3 +41,5 @@ POST    /app/v1/booklist            controllers.CourseController.booklist
 POST    /app/v1/addquestion         controllers.QuestionController.addQuestion
 
 POST    /app/v1/questions           controllers.QuestionController.list
+
+POST    /app/v1/question            controllers.QuestionController.getQuestion

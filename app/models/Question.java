@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,7 +21,8 @@ public class Question extends Model {
     public String title;
 
     // 选项
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
     public List<Option> options;
 
     // 多个,则用"、"隔开

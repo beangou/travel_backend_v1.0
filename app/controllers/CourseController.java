@@ -10,9 +10,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.CourseTypeEnum;
 
+import java.util.HashMap;
 import java.util.List;
-
-import static utils.CourseTypeEnum.BOOK_NAME;
+import java.util.Map;
 
 public class CourseController extends Controller {
 
@@ -20,7 +20,13 @@ public class CourseController extends Controller {
         JsonNode json = request().body().asJson();
         System.out.println("json=" + json);
         Integer id = json.findPath("id").asInt();
-        return ok(Json.toJson(Course.find.byId(id)));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("responseCode", "00");
+        map.put("responseMsg", "SUCCESS");
+        map.put("data", Course.find.byId(id));
+
+        return ok(Json.toJson(map));
     }
 
     public Result booklist() {
@@ -55,14 +61,15 @@ public class CourseController extends Controller {
             // 如果查询节,则也查出小节
            for (Course course : list) {
                List<Course> sonlist = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
-               System.out.println("*********");
-               System.out.println("sonlist=" + sonlist);
                course.setSonCourses(sonlist);
-               sonlist = null;
            }
         }
 
-        return ok(Json.toJson(list));
+        Map<String, Object> map = new HashMap<>();
+        map.put("responseCode", "00");
+        map.put("responseMsg", "SUCCESS");
+        map.put("data", list);
+        return ok(Json.toJson(map));
     }
 
     public Result addCourse() {

@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.PagedList;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.BlogPost;
 import models.Option;
@@ -12,9 +13,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -23,22 +22,40 @@ import java.util.List;
 public class QuestionController extends Controller {
 
     public Result list() {
-        List<Question> list = Ebean.find(Question.class).findList();
-        return ok(Json.toJson(list));
+        JsonNode json = request().body().asJson();
+        Integer pageIndex = json.path("pageIndex").asInt();
+        Integer pageSize  = json.path("pageSize").asInt();
+        if(pageIndex == null) {
+            pageIndex = 1;
+        }
+        if(pageSize == null) {
+            pageSize = 10;
+        }
+        PagedList<Question> list = Ebean.find(Question.class).findPagedList(pageIndex, pageSize);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("responseCode", "00");
+        map.put("responseMsg", "SUCCESS");
+        map.put("data", list);
+        return ok(Json.toJson(map));
+    }
+
+    public Result getQuestion() {
+        JsonNode json = request().body().asJson();
+        Integer id = json.path("id").asInt();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("responseCode", "00");
+        map.put("responseMsg", "SUCCESS");
+        map.put("data", Question.find.byId(id));
+        return ok(Json.toJson(map));
     }
 
     public Result addQuestion() {
-//        Form<QuestionForm> questionForm = Form.form(QuestionForm.class).bindFromRequest();
-
-//        if (questionForm.hasErrors()) {
-//            return badRequest(questionForm.errorsAsJson());
-//        } else {
 
         JsonNode json = request().body().asJson();
 
         System.out.println("json=" + json);
-
-//        List<String> options = json.findValuesAsText("options");
 
         List<Option> optionList = new ArrayList<>();
         Iterator<JsonNode> options = json.path("options").iterator();
