@@ -32,6 +32,40 @@ public class Course extends Model {
     // 书的parentId为0
     public Integer parentId;
 
+    // 创建时间
+    public Date createdAt;
+
+    // 更新时间
+    public Date updatedAt;
+
+    // 删除时间
+    public Date deletedAt;
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Date getCreatedAt() {
+
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
     @Transient
     public List<Course> sonCourses;
 

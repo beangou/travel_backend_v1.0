@@ -18,6 +18,9 @@ create table my_course (
   title                         varchar(255),
   content                       varchar(255),
   parent_id                     integer,
+  created_at                    datetime(6),
+  updated_at                    datetime(6),
+  deleted_at                    datetime(6),
   constraint pk_my_course primary key (id)
 );
 
@@ -44,6 +47,10 @@ create table my_question (
   title                         varchar(255),
   answers                       varchar(255),
   analysis                      varchar(255),
+  type                          integer,
+  created_at                    datetime(6),
+  updated_at                    datetime(6),
+  deleted_at                    datetime(6),
   constraint pk_my_question primary key (id)
 );
 

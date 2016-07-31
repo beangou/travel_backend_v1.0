@@ -3,12 +3,8 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.PagedList;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.BlogPost;
 import models.Option;
 import models.Question;
-import models.User;
-import play.data.Form;
-import play.data.validation.Constraints;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -57,42 +53,35 @@ public class QuestionController extends Controller {
         JsonNode json = request().body().asJson();
 
         System.out.println("json=" + json);
-
-        List<Option> optionList = new ArrayList<>();
-        Iterator<JsonNode> options = json.path("options").iterator();
-        while(options.hasNext()) {
-            JsonNode node = options.next();
-            Option option = new Option();
-            option.setContent(node.textValue());
-            optionList.add(option);
-            System.out.println("option=" + node.textValue());
-        }
-
-        System.out.println("options=" + options);
+        Integer type = json.path("type").asInt();
+        Date now = new Date();
 
         Question question = new Question();
         question.setTitle(json.path("title").asText());
         question.setAnalysis(json.path("analysis").asText());
         question.setAnswers(json.path("answers").toString());
-        question.setOptions(optionList);
+        question.setType(type);
+        question.setCreatedAt(now);
+        question.setUpdatedAt(now);
+
+        if(type != 3) {
+            // 选择题才有选项
+            List<Option> optionList = new ArrayList<>();
+            Iterator<JsonNode> options = json.path("options").iterator();
+
+            while(options.hasNext()) {
+                JsonNode node = options.next();
+                Option option = new Option();
+                option.setContent(node.textValue());
+                option.setCreatedAt(now);
+                option.setUpdatedAt(now);
+                optionList.add(option);
+            }
+            question.setOptions(optionList);
+        }
 
         question.save();
-//        }
         return ok(ApplicationController.buildJsonResponse("success", "question added successfully"));
-    }
-
-    public static class QuestionForm {
-
-        @Constraints.Required
-        public String title;
-
-        @Constraints.Required
-        public String options[];
-
-        @Constraints.Required
-        public String answers[];
-
-        public String analysis;
     }
 
 

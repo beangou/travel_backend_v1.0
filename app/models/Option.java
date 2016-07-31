@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by beangou on 16/7/2.
@@ -32,13 +33,13 @@ public class Option extends Model {
     public Question question;
 
     // 创建时间
-    public Timestamp created_at;
+    public Date createdAt;
 
     // 更新时间
-    public Timestamp updated_at;
+    public Date updatedAt;
 
     // 删除时间
-    public Timestamp deleted_at;
+    public Date deletedAt;
 
     public static Finder<Integer, Option> find = new Finder<>(Option.class);
 
@@ -50,16 +51,16 @@ public class Option extends Model {
         this.content = content;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setUpdated_at(Timestamp updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public void setDeleted_at(Timestamp deleted_at) {
-        this.deleted_at = deleted_at;
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public Integer getId() {
@@ -71,16 +72,16 @@ public class Option extends Model {
         return content;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public Timestamp getUpdated_at() {
-        return updated_at;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public Timestamp getDeleted_at() {
-        return deleted_at;
+    public Date getDeletedAt() {
+        return deletedAt;
     }
 
 }
