@@ -75,7 +75,7 @@ alter table post_comment add constraint fk_post_comment_user_id foreign key (use
 create index ix_post_comment_user_id on post_comment (user_id);
 
 
-# --- !Downs
+# --- !Downsa
 
 alter table blog_post drop foreign key fk_blog_post_user_id;
 drop index ix_blog_post_user_id on blog_post;
