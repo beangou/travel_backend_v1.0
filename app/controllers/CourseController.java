@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Course;
+import models.Question;
 import play.data.Form;
 import play.data.validation.Constraints;
 import play.libs.Json;
@@ -14,8 +15,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CourseController extends Controller {
+
+    public Result getChapters() {
+        JsonNode json = request().body().asJson();
+        System.out.println("json=" + json);
+        Integer parentId = json.findPath("parentId").asInt();
+        System.out.println("parentId=" + parentId);
+        List<Course> list = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", parentId).eq("type", 2).findList();
+
+        if(list != null) {
+            for (Course chapter: list) {
+                List<Integer> typeList = chapter.getQuestions().stream().map((question)->question.getType()).distinct().collect(Collectors.toList());
+                chapter.setTypeList(typeList);
+                chapter.setQuestions(null);
+            }
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("responseCode", "00");
+        map.put("responseMsg", "SUCCESS");
+        map.put("data", list);
+        return ok(Json.toJson(map));
+    }
 
     public Result getCourse() {
         JsonNode json = request().body().asJson();
@@ -58,12 +82,15 @@ public class CourseController extends Controller {
         Integer parentId = json.findPath("parentId").asInt();
         System.out.println("parentId=" + parentId);
         List<Course> list = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", parentId).findList();
+//        List<Course> list = Ebean.find(Course.class).fetch("id").where().eq("parentId", parentId).findList();
         Integer type = json.findPath("type").asInt();
         System.out.println("type="+type);
-        if(type != null && list != null) {
+        if(type != 0 && list != null) {
             // 如果查询节,则也查出小节
            for (Course course : list) {
-               List<Course> sonlist = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
+//               List<Course> sonlist = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
+//               Ebean.find(Course.class).select("id, type, title, parent_id").where().eq("parentId", course.getId()).findList();
+               List<Course> sonlist = Course.find.select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
                course.setSonCourses(sonlist);
            }
         }

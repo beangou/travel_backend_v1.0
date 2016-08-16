@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -40,6 +41,20 @@ public class Question extends Model {
 
     // 更新时间
     public Date updatedAt;
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Course getCourse() {
+        return course;
+
+    }
+
+    // 章节
+    @ManyToOne
+    @JsonBackReference
+    public Course course;
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;

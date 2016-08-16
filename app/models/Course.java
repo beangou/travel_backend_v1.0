@@ -1,11 +1,9 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +38,33 @@ public class Course extends Model {
 
     // 删除时间
     public Date deletedAt;
+
+    @Transient
+    public List<Integer> typeList;
+
+    // 章下面的题目
+
+    public void setTypeList(List<Integer> typeList) {
+        this.typeList = typeList;
+    }
+
+    public List<Integer> getTypeList() {
+
+        return typeList;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
+    public List<Question> questions;
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+
+    }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;

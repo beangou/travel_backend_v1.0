@@ -36,6 +36,8 @@ PATCH   /app/v1/course              controllers.CourseController.updateCourse
 
 POST    /app/v1/course              controllers.CourseController.getCourse
 
+POST    /app/v1/getChapters         controllers.CourseController.getChapters
+
 POST    /app/v1/booklist            controllers.CourseController.booklist
 
 POST    /app/v1/addquestion         controllers.QuestionController.addQuestion
@@ -43,3 +45,4 @@ POST    /app/v1/addquestion         controllers.QuestionController.addQuestion
 POST    /app/v1/questions           controllers.QuestionController.list
 
 POST    /app/v1/question            controllers.QuestionController.getQuestion
+

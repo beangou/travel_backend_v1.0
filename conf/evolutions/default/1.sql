@@ -50,6 +50,7 @@ create table my_question (
   type                          integer,
   created_at                    datetime(6),
   updated_at                    datetime(6),
+  course_id                     integer,
   deleted_at                    datetime(6),
   constraint pk_my_question primary key (id)
 );
@@ -74,8 +75,11 @@ create index ix_post_comment_blog_post_id on post_comment (blog_post_id);
 alter table post_comment add constraint fk_post_comment_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_post_comment_user_id on post_comment (user_id);
 
+alter table my_question add constraint fk_my_question_course_id foreign key (course_id) references my_course (id) on delete restrict on update restrict;
+create index ix_my_question_course_id on my_question (course_id);
 
-# --- !Downsa
+
+# --- !Downs
 
 alter table blog_post drop foreign key fk_blog_post_user_id;
 drop index ix_blog_post_user_id on blog_post;
@@ -88,6 +92,9 @@ drop index ix_post_comment_blog_post_id on post_comment;
 
 alter table post_comment drop foreign key fk_post_comment_user_id;
 drop index ix_post_comment_user_id on post_comment;
+
+alter table my_question drop foreign key fk_my_question_course_id;
+drop index ix_my_question_course_id on my_question;
 
 drop table if exists blog_post;
 

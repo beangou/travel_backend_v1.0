@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.PagedList;
 import com.fasterxml.jackson.databind.JsonNode;
+import models.Course;
 import models.Option;
 import models.Question;
 import play.libs.Json;
@@ -27,6 +28,7 @@ public class QuestionController extends Controller {
         if(pageSize == null) {
             pageSize = 5;
         }
+
         PagedList<Question> list = Ebean.find(Question.class).findPagedList(pageIndex, pageSize);
         int rowCount = Question.find.findRowCount();
         Map<String, Object> map = new HashMap<>();
@@ -64,6 +66,9 @@ public class QuestionController extends Controller {
         question.setCreatedAt(now);
         question.setUpdatedAt(now);
 
+        Integer courseId = json.path("courseId").asInt();
+        Course course = Course.find.byId(courseId);
+        question.setCourse(course);
         if(type != 3) {
             // 选择题才有选项
             List<Option> optionList = new ArrayList<>();
