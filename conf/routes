@@ -46,3 +46,4 @@ POST    /app/v1/questions           controllers.QuestionController.list
 
 POST    /app/v1/question            controllers.QuestionController.getQuestion
 
+POST    /app/v1/listByCourseAndType controllers.QuestionController.getListByCourseAndType

@@ -11,10 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.CourseTypeEnum;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CourseController extends Controller {
@@ -30,7 +27,6 @@ public class CourseController extends Controller {
             for (Course chapter: list) {
                 List<Integer> typeList = chapter.getQuestions().stream().map((question)->question.getType()).distinct().collect(Collectors.toList());
                 chapter.setTypeList(typeList);
-                chapter.setQuestions(null);
             }
         }
 

@@ -18,6 +18,20 @@ import java.util.*;
  */
 public class QuestionController extends Controller {
 
+    public Result getListByCourseAndType() {
+        JsonNode json = request().body().asJson();
+        Integer courseId = json.path("courseId").asInt();
+        Integer type  = json.path("type").asInt();
+
+        List<Question> list = Ebean.find(Question.class).where().eq("course_id", courseId).eq("type", type).findList();
+        Map<String, Object> map = new HashMap<>();
+        map.put("responseCode", "00");
+        map.put("responseMsg", "SUCCESS");
+        map.put("data", list);
+        return ok(Json.toJson(map));
+    }
+
+
     public Result list() {
         JsonNode json = request().body().asJson();
         Integer pageIndex = json.path("pageIndex").asInt();
