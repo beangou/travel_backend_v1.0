@@ -21,15 +21,15 @@ public class CourseController extends Controller {
         System.out.println("json=" + json);
         Integer parentId = json.findPath("parentId").asInt();
         System.out.println("parentId=" + parentId);
-        List<Course> list = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", parentId).eq("type", 2).findList();
-
+        List<Course> list = Ebean.find(Course.class).where().eq("parentId", parentId).eq("type", 2).select("id, type, title, parentId").findList();
         if(list != null) {
             for (Course chapter: list) {
                 List<Integer> typeList = chapter.getQuestions().stream().map((question)->question.getType()).distinct().collect(Collectors.toList());
                 chapter.setTypeList(typeList);
+                chapter.setQuestions(null);
+                chapter.getQuestions();
             }
         }
-
         Map<String, Object> map = new HashMap<>();
         map.put("responseCode", "00");
         map.put("responseMsg", "SUCCESS");
@@ -77,17 +77,16 @@ public class CourseController extends Controller {
         System.out.println("json=" + json);
         Integer parentId = json.findPath("parentId").asInt();
         System.out.println("parentId=" + parentId);
-        List<Course> list = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", parentId).findList();
+        List<Course> list = Ebean.find(Course.class).where().eq("parentId", parentId).select("id, type, title, parentId").findList();
 //        List<Course> list = Ebean.find(Course.class).fetch("id").where().eq("parentId", parentId).findList();
         Integer type = json.findPath("type").asInt();
         System.out.println("type="+type);
         if(type != 0 && list != null) {
             // 如果查询节,则也查出小节
            for (Course course : list) {
-//               List<Course> sonlist = Ebean.find(Course.class).select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
-//               Ebean.find(Course.class).select("id, type, title, parent_id").where().eq("parentId", course.getId()).findList();
                List<Course> sonlist = Course.find.select("id, type, title, parentId").where().eq("parentId", course.getId()).findList();
                course.setSonCourses(sonlist);
+               course.setContent(null);
            }
         }
 
