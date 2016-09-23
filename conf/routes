@@ -36,6 +36,8 @@ PATCH   /app/v1/course              controllers.CourseController.updateCourse
 
 POST    /app/v1/course              controllers.CourseController.getCourse
 
+POST    /app/v1/deletecourse        controllers.CourseController.deleteCourse
+
 POST    /app/v1/getChapters         controllers.CourseController.getChapters
 
 POST    /app/v1/booklist            controllers.CourseController.booklist

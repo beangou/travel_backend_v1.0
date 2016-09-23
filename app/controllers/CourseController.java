@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.netty.util.internal.StringUtil;
 import models.Course;
 import models.Question;
 import play.data.Form;
@@ -58,6 +59,22 @@ public class CourseController extends Controller {
         return ok(Json.toJson(Course.find.findList()));
     }
 
+    public Result deleteCourse() {
+        JsonNode json = request().body().asJson();
+        System.out.println("json=" + json);
+        Integer id = json.findPath("id").asInt();
+
+        Map<String, Object> map = new HashMap<>();
+        if(Course.find.byId(id).delete()) {
+            map.put("responseCode", "00");
+            map.put("responseMsg", "SUCCESS");
+        }else {
+            map.put("responseCode", "01");
+            map.put("responseMsg", "FAILURE");
+        }
+        return ok(Json.toJson(map));
+    }
+
     public Result updateCourse() {
         Form<CourseUpdateForm> courseUpdateForm = Form.form(CourseUpdateForm.class).bindFromRequest();
         if (courseUpdateForm.hasErrors()) {
@@ -65,7 +82,12 @@ public class CourseController extends Controller {
         } else {
             Date now = new Date();
             Course course = Course.find.byId(courseUpdateForm.get().id);
-            course.setContent(courseUpdateForm.get().content);
+            if(!StringUtil.isNullOrEmpty(courseUpdateForm.get().content)) {
+                course.setContent(courseUpdateForm.get().content);
+            }
+            if(!StringUtil.isNullOrEmpty(courseUpdateForm.get().title)) {
+                course.setTitle(courseUpdateForm.get().title);
+            }
             course.setUpdatedAt(now);
             course.update();
         }
@@ -121,7 +143,8 @@ public class CourseController extends Controller {
         @Constraints.Required
         public Integer id;
 
-        @Constraints.Required
+        public String title;
+
         public String content;
     }
 
